@@ -2,7 +2,14 @@
 <ContentPage
     x:Class="KolomiietsEktosTest.UI.Views.ItemsView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:KolomiietsEktosTest.UI.Converters">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:UnixToDateTimeConverter x:Key="UnixToDateTimeConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <VerticalStackLayout Padding="10" Spacing="10">
 
@@ -24,7 +31,6 @@
             Text="No items found."
             VerticalOptions="Center" />
 
-
         <CollectionView IsVisible="{Binding HasItems}" ItemsSource="{Binding Items}">
 
             <CollectionView.Header>
@@ -33,58 +39,44 @@
                     BackgroundColor="#EEE"
                     ColumnSpacing="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="2*" />
+                        <!--  Date/Time  -->
                         <ColumnDefinition Width="*" />
+                        <!--  Latitude  -->
                         <ColumnDefinition Width="*" />
+                        <!--  Longitude  -->
                         <ColumnDefinition Width="*" />
+                        <!--  Rod Size  -->
                         <ColumnDefinition Width="*" />
+                        <!--  Pipe Size  -->
+                        <ColumnDefinition Width="*" />
+                        <!--  Temp  -->
                     </Grid.ColumnDefinitions>
 
                     <Label
                         Grid.Column="0"
                         FontAttributes="Bold"
-                        Text="ID" />
+                        Text="Date/Time" />
                     <Label
                         Grid.Column="1"
                         FontAttributes="Bold"
-                        Text="Size" />
+                        Text="Latitude" />
                     <Label
                         Grid.Column="2"
                         FontAttributes="Bold"
-                        Text="Date/Time" />
+                        Text="Longitude" />
                     <Label
                         Grid.Column="3"
                         FontAttributes="Bold"
-                        Text="Serial" />
+                        Text="Rod Size" />
                     <Label
                         Grid.Column="4"
                         FontAttributes="Bold"
-                        Text="Latitude" />
+                        Text="Pipe Size" />
                     <Label
                         Grid.Column="5"
                         FontAttributes="Bold"
-                        Text="Longitude" />
-                    <Label
-                        Grid.Column="6"
-                        FontAttributes="Bold"
-                        Text="Rod Size" />
-                    <Label
-                        Grid.Column="7"
-                        FontAttributes="Bold"
-                        Text="Pipe Size" />
-                    <Label
-                        Grid.Column="8"
-                        FontAttributes="Bold"
                         Text="Temp" />
-                    <Label
-                        Grid.Column="9"
-                        FontAttributes="Bold"
-                        Text="Alarms" />
                 </Grid>
             </CollectionView.Header>
 
@@ -92,31 +84,30 @@
                 <DataTemplate>
                     <Grid Padding="10" ColumnSpacing="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="2*" />
+                            <!--  Date/Time  -->
                             <ColumnDefinition Width="*" />
+                            <!--  Latitude  -->
                             <ColumnDefinition Width="*" />
+                            <!--  Longitude  -->
                             <ColumnDefinition Width="*" />
+                            <!--  Rod Size  -->
                             <ColumnDefinition Width="*" />
+                            <!--  Pipe Size  -->
+                            <ColumnDefinition Width="*" />
+                            <!--  Temp  -->
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="{Binding ID}" />
-                        <Label Grid.Column="1" Text="{Binding Size}" />
-                        <Label Grid.Column="2" Text="{Binding DateTimeUnix}" />
-                        <Label Grid.Column="3" Text="{Binding SerialNumber}" />
-                        <Label Grid.Column="4" Text="{Binding Latitude}" />
-                        <Label Grid.Column="5" Text="{Binding Longitude}" />
-                        <Label Grid.Column="6" Text="{Binding RodSize}" />
-                        <Label Grid.Column="7" Text="{Binding PipeSize}" />
-                        <Label Grid.Column="8" Text="{Binding Temperature}" />
-                        <Label Grid.Column="9" Text="{Binding Alarms}" />
+                        <Label Grid.Column="0" Text="{Binding DateTimeUnix, Converter={StaticResource UnixToDateTimeConverter}}" />
+                        <Label Grid.Column="1" Text="{Binding Latitude}" />
+                        <Label Grid.Column="2" Text="{Binding Longitude}" />
+                        <Label Grid.Column="3" Text="{Binding RodSize}" />
+                        <Label Grid.Column="4" Text="{Binding PipeSize}" />
+                        <Label Grid.Column="5" Text="{Binding Temperature}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
         </CollectionView>
 
     </VerticalStackLayout>
