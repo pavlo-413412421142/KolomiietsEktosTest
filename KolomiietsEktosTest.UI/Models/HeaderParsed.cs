@@ -1,26 +1,50 @@
-﻿using MongoDB.Bson;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace KolomiietsEktosTest.UI.Models
 {
-    public class HeaderParsed
+    public partial class HeaderParsed : ObservableObject
     {
+        private const double CmToInch = 0.393700787;
+        private const double InchToCm = 1 / CmToInch;
+        private const double CelsiusToFahrenheitMultiplier = 9.0 / 5.0;
+        private const double CelsiusToFahrenheitOffset = 32.0;
+
         public byte ID { get; set; }
         public byte Size { get; set; }
+
         [BsonRepresentation(BsonType.Int32)]
-        public uint DateTimeUnix { get; set; }
+        [ObservableProperty]
+        private uint dateTimeUnix;
+
         public byte[] Reserv { get; set; } = new byte[8];
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
+
+        [ObservableProperty] private float latitude;
+        [ObservableProperty] private float longitude;
+
         [BsonRepresentation(BsonType.String)]
         [MaxLength(8)]
         public string SerialNumber { get; set; }
-        public uint RodSize { get; set; }
-        public uint PipeSize { get; set; }
-        public float? Temperature { get; set; }
+
+        [ObservableProperty] private uint rodSize;
+        [ObservableProperty] private uint pipeSize;
+        [ObservableProperty] private float? temperature;
+
         public ushort? Alarms { get; set; }
+
+        [ObservableProperty]
+        private bool isMetric = true;
+
+
+        public double RodSizeDisplay => isMetric ? rodSize : Math.Round(rodSize * CmToInch, 3);
+        public double PipeSizeDisplay => isMetric ? pipeSize : Math.Round(pipeSize * CmToInch, 3);
+        public double? TemperatureDisplay => temperature.HasValue
+            ? (isMetric ? temperature.Value : Math.Round(temperature.Value * CelsiusToFahrenheitMultiplier + CelsiusToFahrenheitOffset, 2))
+            : null;
+
 
         public static HeaderParsed ParseFromBinary(byte[] data)
         {
@@ -56,6 +80,18 @@ namespace KolomiietsEktosTest.UI.Models
             }
 
             return header;
+        }
+
+        public void LoadPreferences()
+        {
+            IsMetric = Preferences.Get(nameof(IsMetric), true);
+        }
+
+        public void NotifyDisplayPropertiesChanged()
+        {
+            OnPropertyChanged(nameof(RodSizeDisplay));
+            OnPropertyChanged(nameof(PipeSizeDisplay));
+            OnPropertyChanged(nameof(TemperatureDisplay));
         }
     }
 }

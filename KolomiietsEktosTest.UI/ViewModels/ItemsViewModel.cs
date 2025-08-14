@@ -13,25 +13,31 @@ public partial class ItemsViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanLoadItems))]
-    private bool isBusy;
+    private bool isBusy = false;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasItems))]
     [NotifyPropertyChangedFor(nameof(CanLoadItems))]
-    private bool isEmpty;
+    private bool isEmpty = true;
 
+    [ObservableProperty]
+    private bool isMetric = true;
+
+    public string UnitSystemButtonText => IsMetric ? "Switch to Imperial" : "Switch to Metric";
     public bool HasItems => !IsEmpty;
-
     public bool CanLoadItems => !IsBusy;
 
     public ObservableCollection<HeaderParsed> Items { get; } = new();
 
     public IAsyncRelayCommand LoadItemsCommand { get; }
+    public IRelayCommand ToggleUnitSystemCommand { get; }
 
     public ItemsViewModel(DataService dataService)
     {
         _dataService = dataService;
+
         LoadItemsCommand = new AsyncRelayCommand(LoadItemsAsync);
+        ToggleUnitSystemCommand = new RelayCommand(ToggleUnitSystem);
     }
 
     private async Task LoadItemsAsync()
@@ -49,7 +55,8 @@ public partial class ItemsViewModel : ObservableObject
             foreach (var dbItem in itemsFromDb)
             {
                 var parsed = HeaderParsed.ParseFromBinary(dbItem.Header);
-                MainThread.BeginInvokeOnMainThread(() => Items.Add(parsed));
+                parsed.IsMetric = this.IsMetric;
+                Items.Add(parsed);
             }
 
             IsEmpty = Items.Count == 0;
@@ -57,10 +64,27 @@ public partial class ItemsViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine("Failed to load items: " + ex.Message);
+            IsEmpty = true;
         }
         finally
         {
             IsBusy = false;
         }
+    }
+
+    private void ToggleUnitSystem()
+    {
+        if (Items.Count == 0)
+            return;
+
+        IsMetric = !IsMetric;
+
+        foreach (var item in Items)
+        {
+            item.IsMetric = IsMetric;
+            item.NotifyDisplayPropertiesChanged();
+        }
+
+        OnPropertyChanged(nameof(UnitSystemButtonText));
     }
 }

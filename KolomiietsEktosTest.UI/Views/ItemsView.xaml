@@ -11,27 +11,46 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <VerticalStackLayout Padding="10" Spacing="10">
+    <Grid Padding="10" RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <!--  Toggle Unit System  -->
         <Button
-            Margin="0,0,0,10"
+            Grid.Row="0"
+            Command="{Binding ToggleUnitSystemCommand}"
+            IsEnabled="{Binding HasItems}"
+            Text="{Binding UnitSystemButtonText}" />
+
+        <!--  Load Items  -->
+        <Button
+            Grid.Row="1"
             Command="{Binding LoadItemsCommand}"
             IsEnabled="{Binding CanLoadItems}"
             Text="Get items" />
 
-        <ActivityIndicator
+        <!--  Status area  -->
+        <StackLayout
+            Grid.Row="2"
             HorizontalOptions="Center"
-            IsRunning="{Binding IsBusy}"
-            IsVisible="{Binding IsBusy}"
-            VerticalOptions="Center" />
+            Orientation="Vertical"
+            VerticalOptions="Center">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label
+                HorizontalOptions="Center"
+                IsVisible="{Binding IsEmpty}"
+                Text="No items found." />
+        </StackLayout>
 
-        <Label
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsEmpty}"
-            Text="No items found."
-            VerticalOptions="Center" />
-
-        <CollectionView IsVisible="{Binding HasItems}" ItemsSource="{Binding Items}">
+        <!--  Items list  -->
+        <CollectionView
+            Grid.Row="3"
+            IsVisible="{Binding HasItems}"
+            ItemsSource="{Binding Items}">
 
             <CollectionView.Header>
                 <Grid
@@ -40,19 +59,12 @@
                     ColumnSpacing="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />
-                        <!--  Date/Time  -->
                         <ColumnDefinition Width="*" />
-                        <!--  Latitude  -->
                         <ColumnDefinition Width="*" />
-                        <!--  Longitude  -->
                         <ColumnDefinition Width="*" />
-                        <!--  Rod Size  -->
                         <ColumnDefinition Width="*" />
-                        <!--  Pipe Size  -->
                         <ColumnDefinition Width="*" />
-                        <!--  Temp  -->
                     </Grid.ColumnDefinitions>
-
                     <Label
                         Grid.Column="0"
                         FontAttributes="Bold"
@@ -85,30 +97,21 @@
                     <Grid Padding="10" ColumnSpacing="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" />
-                            <!--  Date/Time  -->
                             <ColumnDefinition Width="*" />
-                            <!--  Latitude  -->
                             <ColumnDefinition Width="*" />
-                            <!--  Longitude  -->
                             <ColumnDefinition Width="*" />
-                            <!--  Rod Size  -->
                             <ColumnDefinition Width="*" />
-                            <!--  Pipe Size  -->
                             <ColumnDefinition Width="*" />
-                            <!--  Temp  -->
                         </Grid.ColumnDefinitions>
-
                         <Label Grid.Column="0" Text="{Binding DateTimeUnix, Converter={StaticResource UnixToDateTimeConverter}}" />
                         <Label Grid.Column="1" Text="{Binding Latitude}" />
                         <Label Grid.Column="2" Text="{Binding Longitude}" />
-                        <Label Grid.Column="3" Text="{Binding RodSize}" />
-                        <Label Grid.Column="4" Text="{Binding PipeSize}" />
-                        <Label Grid.Column="5" Text="{Binding Temperature}" />
+                        <Label Grid.Column="3" Text="{Binding RodSizeDisplay}" />
+                        <Label Grid.Column="4" Text="{Binding PipeSizeDisplay}" />
+                        <Label Grid.Column="5" Text="{Binding TemperatureDisplay}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-
         </CollectionView>
-
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>
