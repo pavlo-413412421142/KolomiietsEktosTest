@@ -4,12 +4,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:KolomiietsEktosTest.UI"
-    Shell.FlyoutBehavior="Disabled"
-    Title="KolomiietsEktosTest.UI">
+    xmlns:pages="clr-namespace:KolomiietsEktosTest.UI.Views"
+    Title="KolomiietsEktosTest.UI"
+    Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <ShellContent ContentTemplate="{DataTemplate pages:ItemsView}" Route="MainPage" />
 
 </Shell>
