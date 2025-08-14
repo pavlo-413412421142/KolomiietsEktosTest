@@ -20,13 +20,20 @@
    ```
 
 2. **Update the connection string**  
-   Inside `appsettings.json`, set your MongoDB connection string in the following format:
+    Inside `appsettings.json`, set your MongoDB connection string in the following format:
 
    ```json
    {
      "MongoDb": {
-       "ConnectionString": "mongodb+srv://user:pass@cluster0.xxfma.mongodb.net/MyDatabase?authSource=admin&appName=Cluster0"
-     }
+       "Windows": {
+         "ConnectionString": "mongodb+srv://Tester:YOUR_PASSWORD@cluster0.oxfma.mongodb.net/?authSource=admin&appName=Cluster0"
+       },
+       "Other": {
+         "ConnectionString": "mongodb://Tester:YOUR_PASSWORD@cluster0-shard-00-00.oxfma.mongodb.net:27017,cluster0-shard-00-01.oxfma.mongodb.net:27017,cluster0-shard-00-02.oxfma.mongodb.net:27017/?ssl=true&replicaSet=atlas-idcd4-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0"
+       }
+     },
+     "DbName": "BinaryDB",
+     "CollectionName": "Items"
    }
    ```
 
